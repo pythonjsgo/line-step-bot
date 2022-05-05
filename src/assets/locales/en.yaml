@@ -1,0 +1,17 @@
+language-setup-successfully: Language setup successfully!
+main-menu: 'Main menu'
+pre-sale: <b>💰You can buy our LITE token at a closed sale on the website - </b>https://lite-step.shop
+balance: |
+  <b>Баланс 💰
+  
+  Баланс: ${balance} LITE
+  Минимальная сумма вывода: ${minimumWithdrawalAmount} LITE
+  </b>
+referrals: |
+  <b>Invite partners to the bot and get “${BONUS_PER_ONE_REFERRAL} LITE” for each</b>
+
+  <b>Your referral link:</b>
+    ${referralUrl}
+  
+  <b>Invited:</b> ${invited}
+  <b>Income:</b> ${profit} LITE

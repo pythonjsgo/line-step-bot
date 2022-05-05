@@ -1,7 +1,8 @@
 import {MongoClient} from 'mongodb'
 import * as config from '../config'
-import {Language, UserID} from "@/types";
+import {Language, UserID} from "./types";
 import {createClient} from "redis";
+import {readUserData} from "./middlewares/db";
 
 export const redis = createClient();
 redis.on('error', (err) => console.log('Redis Client Error', err));
@@ -37,7 +38,17 @@ export async function setUserStep(userID: number, step: string = '') {
 
 export async function setLanguage(userID: number, language: Language) {
     const db = await dbManager
-    return await db.users.updateOne({userID}, {$setOnInsert: language}, {upsert: true})
+    redis.set(`${config.DB_NAME}-${userID}-language`, language)
+    return await db.users.updateOne({userID}, {$setOnInsert: {language: language}}, {upsert: true})
+}
+export async function getLanguage(userID: number){
+    let cache = redis.get(`${config.DB_NAME}-${userID}-language`)
+    if (cache) return cache
+
+    const db = await dbManager
+    let language: string = (await db.users.findOne({userID}))?.language
+    redis.set(`${config.DB_NAME}-${userID}-language`, language)
+    return language
 }
 
 export async function getUserData(userID: UserID) {
